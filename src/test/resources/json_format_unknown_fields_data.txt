@@ -1,1 +1,0 @@
-{"optional_int64": 456,"optional_string": "foo","optional_import_message": {"d": 123},"default_int32": 123}

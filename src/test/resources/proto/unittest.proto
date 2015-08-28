@@ -413,8 +413,6 @@ enum TestEnumWithDupValue {
   FOO1 = 1;
   BAR1 = 2;
   BAZ = 3;
-  FOO2 = 1;
-  BAR2 = 2;
 }
 
 // Test an enum with large, unordered values.
@@ -453,8 +451,8 @@ message TestFieldOrderings {
   optional string my_string = 11;
   extensions 2 to 10;
   optional int64 my_int = 1;
-  extensions 12 to 100;
-  optional float my_float = 101;
+  optional float my_float = 12;
+  extensions 13 to 100;
 }
 
 
