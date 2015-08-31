@@ -87,7 +87,7 @@ public class ProtobufTlvParser {
                 return value.getDouble();
 
             case BOOL:
-                return value.getInt() > 0;
+                return value.get() == 1;
 
             case STRING:
                 return new String(value.array());
@@ -95,7 +95,7 @@ public class ProtobufTlvParser {
             case BYTES:
                 return value.array();
 
-            case ENUM: {
+            case ENUM:
                 Descriptors.EnumDescriptor enumType = field.getEnumType();
                 Descriptors.EnumValueDescriptor enumValue = enumType.getValues().get(value.getInt());
                 if (enumValue == null) {
@@ -105,7 +105,6 @@ public class ProtobufTlvParser {
                             + token + "\".");
                 }
                 return enumValue;
-            }
             case MESSAGE:
             case GROUP:
                 throw new RuntimeException("Can't get here.");
@@ -118,7 +117,11 @@ public class ProtobufTlvParser {
     private Object handleObject(TlvParser tlv, Message.Builder builder,
                                 Descriptors.FieldDescriptor field) throws IOException {
         Message.Builder subBuilder = builder.newBuilderForField(field);
-        mergeFields(tlv.getValue(), subBuilder, tlv.getTag());
+        if (tlv.getTag() == 5) {
+            mergeFields(tlv.getValue(), subBuilder, tlv.getTag());
+        } else {
+            mergeFields(tlv.getValue(), subBuilder, tlv.getTag());
+        }
         return subBuilder.build();
     }
 }

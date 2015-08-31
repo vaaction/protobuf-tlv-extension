@@ -5,9 +5,6 @@ import java.util.Collection;
 
 class TlvParser {
 
-    private static final int NEXT_BYTE = 0x80;
-    private static final int MULTI_BYTE_MASK_TAG = 0x1F;
-
     private final byte[] value;
     private final int index;
     private final int length;
@@ -49,33 +46,7 @@ class TlvParser {
 
         while (index < endIndex) {
             int tag = getNext(index++);
-
-            if (tag == 0x00 || tag == 0xFF)
-                continue;
-
-            if (hasMultipleBytesTag(tag)) {
-                tag <<= 8;
-                tag |= getNext(index++);
-
-                if (hasAnotherByteTag(tag)) {
-                    tag <<= 8;
-                    tag |= getNext(index++);
-                }
-            }
-
             int length = getNext(index++);
-
-            if (length >= NEXT_BYTE) {
-                int numLengthBytes = (length & 0x7F);
-
-                length = 0;
-
-                for (int i = 0; i < numLengthBytes; i++) {
-                    length <<= 8;
-                    length |= getNext(index++);
-                }
-            }
-
             TlvParser tlv = new TlvParser(value, index, length, tag);
             children.add(tlv);
             index += tlv.getLength();
@@ -88,13 +59,5 @@ class TlvParser {
 
     private int getNext(int index) {
         return (value[index] & 0xFF);
-    }
-
-    private boolean hasMultipleBytesTag(int tag) {
-        return (tag & MULTI_BYTE_MASK_TAG) == MULTI_BYTE_MASK_TAG;
-    }
-
-    private boolean hasAnotherByteTag(int tag) {
-        return (tag & NEXT_BYTE) != 0;
     }
 }

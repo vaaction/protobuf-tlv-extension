@@ -78,7 +78,7 @@ public class ProtobufTlvWriter {
                 return;
 
             case BOOL:
-                bytes = new byte[]{(byte)((Boolean) value ? 0x01 : 0x00)};
+                bytes = new byte[]{(byte)((Boolean) value ? 1 : 0)};
                 output.write(field.getNumber(), bytes);
                 return;
 
