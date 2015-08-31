@@ -38,13 +38,13 @@
 // We don't put this in a package within proto2 because we need to make sure
 // that the generated code doesn't depend on being in the proto2 namespace.
 // In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
+// "using namespace unittest_import = me.ibukanov.protobuf".
+package me.ibukanov.protobuf;
 
 option optimize_for = SPEED;
 
 // Excercise the java_package option.
-option java_package = "me.ibukanov.format.test";
+option java_package = "me.ibukanov.protobuf";
 
 // Do not set a java_outer_classname here to verify that Proto2 works without
 // one.

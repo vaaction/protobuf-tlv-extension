@@ -2,7 +2,6 @@ package me.ibukanov.protobuf;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import protobuf_unittest.UnittestProto;
 
 import static org.junit.Assert.*;
 
