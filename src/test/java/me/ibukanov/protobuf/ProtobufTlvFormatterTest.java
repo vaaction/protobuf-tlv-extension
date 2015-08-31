@@ -1,4 +1,4 @@
-package me.ibukanov.format;
+package me.ibukanov.protobuf;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -7,8 +7,8 @@ import protobuf_unittest.UnittestProto;
 import static org.junit.Assert.*;
 
 
-public class TlvFormatTest {
-    private TlvFormat formatter = new TlvFormat();
+public class ProtobufTlvFormatterTest {
+    private ProtobufTlvFormatter formatter = new ProtobufTlvFormatter();
 
     @Test
     public void noChildrenTest() throws Exception {
@@ -17,10 +17,10 @@ public class TlvFormatTest {
                 .setMyInt(1)
                 .setMyString("1")
                 .build();
-        byte[] bytes = formatter.printToBytes(testFieldOrderings);
+        byte[] bytes = formatter.toByteArray(testFieldOrderings);
 
         UnittestProto.TestFieldOrderings.Builder builder = UnittestProto.TestFieldOrderings.newBuilder();
-        formatter.merge(bytes, builder);
+        formatter.parseFrom(bytes, builder);
         assertEquals(testFieldOrderings, builder.build());
     }
 
@@ -32,10 +32,10 @@ public class TlvFormatTest {
                 .setPrimitiveField(1)
                 .setMessageField(UnittestProto.ForeignMessage.newBuilder().setC(2))
                 .build();
-        byte[] bytes = formatter.printToBytes(testCamelCaseFieldNames);
+        byte[] bytes = formatter.toByteArray(testCamelCaseFieldNames);
 
         UnittestProto.TestCamelCaseFieldNames.Builder builder = UnittestProto.TestCamelCaseFieldNames.newBuilder();
-        formatter.merge(bytes, builder);
+        formatter.parseFrom(bytes, builder);
         assertEquals(testCamelCaseFieldNames, builder.build());
     }
 }

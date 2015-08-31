@@ -68,7 +68,7 @@
 						<configuration>
 							<tasks>
 								<mkdir dir="target/generated-test-sources" />
-								<exec executable="${protoc}" failonerror="true">
+								<exec executable="true" failonerror="true">
 									<arg value="--java_out=${project.basedir}/src/test/java" />
 									<arg value="--proto_path=${project.basedir}/src/test/resources" />
 									<arg value="${project.basedir}/src/test/resources/proto/unittest.proto" />
@@ -85,31 +85,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>protoc-dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-				<property>
-					<name>env</name>
-					<value>dev</value>
-				</property>
-			</activation>
-			<properties>
-				<protoc>protoc</protoc>
-			</properties>
-		</profile>
-		<profile>
-			<id>protoc-ci</id>
-			<activation>
-				<property>
-					<name>env</name>
-					<value>ci</value>
-				</property>
-			</activation>
-			<properties>
-				<protoc>${WORKSPACE}/protoc</protoc>
-			</properties>
-		</profile>
-	</profiles>
 </project>
