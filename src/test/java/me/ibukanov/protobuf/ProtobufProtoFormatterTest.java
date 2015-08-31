@@ -29,6 +29,8 @@ public class ProtobufProtoFormatterTest {
                 .setCordField("1")
                 .setPrimitiveField(1)
                 .setMessageField(UnittestProto.ForeignMessage.newBuilder().setC(2))
+                .addRepeatedMessageField(UnittestProto.ForeignMessage.newBuilder().setC(3))
+                .addRepeatedMessageField(UnittestProto.ForeignMessage.newBuilder().setC(4))
                 .build();
         byte[] bytes = formatter.toByteArray(testCamelCaseFieldNames);
 
