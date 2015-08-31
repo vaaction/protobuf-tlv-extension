@@ -3,7 +3,7 @@ package me.ibukanov.protobuf;
 
 import com.google.protobuf.Message;
 
-public class ProtobufTlvFormatter {
+public class ProtobufTlvFormatter implements ProtobufFormatter {
 
     private final ProtobufTlvWriter writer = new ProtobufTlvWriter();
     private final ProtobufTlvParser parser = new ProtobufTlvParser();

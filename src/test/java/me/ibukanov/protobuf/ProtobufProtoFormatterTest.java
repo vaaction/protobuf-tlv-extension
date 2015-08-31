@@ -1,14 +1,13 @@
 package me.ibukanov.protobuf;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 
-public class ProtobufTlvFormatterTest {
+public class ProtobufProtoFormatterTest {
 
-    private ProtobufFormatter formatter = new ProtobufFormatterFactory().createFormatter("tlv");
+    private ProtobufFormatter formatter = new ProtobufFormatterFactory().createFormatter("");
 
     @Test
     public void noChildrenTest() throws Exception {
@@ -25,7 +24,6 @@ public class ProtobufTlvFormatterTest {
     }
 
     @Test
-    @Ignore
     public void withChildrenTest() throws Exception {
         UnittestProto.TestCamelCaseFieldNames testCamelCaseFieldNames = UnittestProto.TestCamelCaseFieldNames.newBuilder()
                 .setCordField("1")
