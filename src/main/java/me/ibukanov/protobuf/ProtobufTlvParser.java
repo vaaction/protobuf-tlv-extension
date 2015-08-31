@@ -97,7 +97,7 @@ public class ProtobufTlvParser {
 
             case ENUM: {
                 Descriptors.EnumDescriptor enumType = field.getEnumType();
-                Descriptors.EnumValueDescriptor enumValue = enumType.findValueByName(String.valueOf(token));
+                Descriptors.EnumValueDescriptor enumValue = enumType.getValues().get(value.getInt());
                 if (enumValue == null) {
                     throw new RuntimeException("Enum type \""
                             + enumType.getFullName()

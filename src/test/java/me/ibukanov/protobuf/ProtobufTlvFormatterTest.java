@@ -30,6 +30,7 @@ public class ProtobufTlvFormatterTest {
         UnittestProto.TestCamelCaseFieldNames testCamelCaseFieldNames = UnittestProto.TestCamelCaseFieldNames.newBuilder()
                 .setCordField("1")
                 .setPrimitiveField(1)
+                .setEnumField(UnittestProto.ForeignEnum.FOREIGN_BAZ)
                 .setMessageField(UnittestProto.ForeignMessage.newBuilder().setC(2))
                 .build();
         byte[] bytes = formatter.toByteArray(testCamelCaseFieldNames);

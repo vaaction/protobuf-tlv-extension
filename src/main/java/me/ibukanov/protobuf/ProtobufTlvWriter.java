@@ -105,7 +105,9 @@ public class ProtobufTlvWriter {
             }
 
             case ENUM: {
-                output.write(field.getNumber(), ((Descriptors.EnumValueDescriptor) value).getName().getBytes());
+                bytes = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE)
+                        .putInt(((Descriptors.EnumValueDescriptor) value).getIndex()).array();
+                output.write(field.getNumber(), bytes);
                 return;
             }
 
