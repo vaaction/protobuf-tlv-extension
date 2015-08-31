@@ -11,21 +11,8 @@ class TlvWriter {
     }
 
     public void write(int tag, byte[] value) throws IOException {
-        writeTag(tag);
-        int length = value.length;
-        writeLength(length);
-        writeData(value);
-    }
-
-    public void writeTag(int tag) throws IOException {
         outputStream.write(tag);
-    }
-
-    public void writeLength(int v) throws IOException {
-        outputStream.write(v);
-    }
-
-    public void writeData(byte[] b) throws IOException {
-        outputStream.write(b);
+        outputStream.write(value.length);
+        outputStream.write(value);
     }
 }

@@ -5,24 +5,21 @@ import java.util.Collection;
 
 class TlvParser {
 
-    private static final int TOP_LEVEL_TAG = 0xFFFF;
     private static final int NEXT_BYTE = 0x80;
     private static final int MULTI_BYTE_MASK_TAG = 0x1F;
-    private static final int CONSTRUCTED_BIT = 0x20;
-
-    public class TlvParserException extends Exception {}
 
     private final byte[] value;
     private final int index;
     private final int length;
     private final int tag;
-    private final Collection<TlvParser> children;
+    private final Collection<TlvParser> children = new ArrayList<TlvParser>();
 
-    public TlvParser(byte[] value) throws TlvParserException {
-        this(value, 0, value.length, TOP_LEVEL_TAG);
+    public TlvParser(byte[] value, int tag) {
+        this(value, 0, value.length, tag);
+        parse();
     }
 
-    private TlvParser(byte[] value, int index, int length, int tag) throws TlvParserException {
+    private TlvParser(byte[] value, int index, int length, int tag) {
         if (value == null)
             throw new IllegalArgumentException("value must not be null");
 
@@ -30,11 +27,6 @@ class TlvParser {
         this.index = index;
         this.length = length;
         this.tag = tag;
-        children = new ArrayList<TlvParser>();
-
-        if (isConstructed()) {
-            parse();
-        }
     }
 
     public int getTag() {
@@ -51,49 +43,34 @@ class TlvParser {
         return children;
     }
 
-    public boolean isConstructed() {
-        return (getFirstTagByte(tag) & CONSTRUCTED_BIT) != 0;
-    }
-
-    private void parse() throws TlvParserException {
+    private void parse() {
         int index = this.index;
         int endIndex = this.index + length;
 
-        while (index < endIndex)
-        {
+        while (index < endIndex) {
             int tag = getNext(index++);
 
             if (tag == 0x00 || tag == 0xFF)
                 continue;
 
-            if (hasMultipleBytesTag(tag))
-            {
+            if (hasMultipleBytesTag(tag)) {
                 tag <<= 8;
                 tag |= getNext(index++);
 
-                if (hasAnotherByteTag(tag))
-                {
+                if (hasAnotherByteTag(tag)) {
                     tag <<= 8;
                     tag |= getNext(index++);
                 }
-
-                if (hasAnotherByteTag(tag))
-                    throw new TlvParserException();
             }
 
             int length = getNext(index++);
 
-            if (length >= NEXT_BYTE)
-            {
+            if (length >= NEXT_BYTE) {
                 int numLengthBytes = (length & 0x7F);
-
-                if (numLengthBytes > 3)
-                    throw new TlvParserException();
 
                 length = 0;
 
-                for (int i = 0; i < numLengthBytes; i++)
-                {
+                for (int i = 0; i < numLengthBytes; i++) {
                     length <<= 8;
                     length |= getNext(index++);
                 }
@@ -109,18 +86,8 @@ class TlvParser {
         return length;
     }
 
-    private int getNext(int index) throws TlvParserException {
-        if (index < this.index || index >= this.index + length)
-            throw new TlvParserException();
-
+    private int getNext(int index) {
         return (value[index] & 0xFF);
-    }
-
-    private int getFirstTagByte(int tag) {
-        while (tag > 0xFF)
-            tag >>= 8;
-
-        return tag;
     }
 
     private boolean hasMultipleBytesTag(int tag) {

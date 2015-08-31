@@ -6,7 +6,6 @@ import com.google.protobuf.Message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -16,23 +15,24 @@ public class ProtobufTlvWriter {
 
     public byte[] toByteArray(Message message) {
         try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            print(message, out);
-            out.flush();
-            return out.toByteArray();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            print(message, new TlvWriter(output));
+            output.flush();
+            return output.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void print(final Message message, OutputStream output) throws IOException {
-        printMessage(message, new TlvWriter(output));
-    }
-
-    private void printMessage(Message message, TlvWriter output) throws IOException {
+    private void print(final Message message, TlvWriter output) throws IOException {
         for (Map.Entry<Descriptors.FieldDescriptor, Object> field : message.getAllFields().entrySet()) {
             printField(field.getKey(), field.getValue(), output);
         }
+    }
+
+    private void printMessage(Descriptors.FieldDescriptor field, Message message, TlvWriter output) throws IOException {
+        byte[] serialized = toByteArray(message);
+        output.write(field.getNumber(), serialized);
     }
 
     private void printField(Descriptors.FieldDescriptor field, Object value, TlvWriter output) throws IOException {
@@ -111,7 +111,7 @@ public class ProtobufTlvWriter {
 
             case MESSAGE:
             case GROUP:
-                printMessage((Message) value, output);
+                printMessage(field, (Message) value, output);
         }
     }
 
