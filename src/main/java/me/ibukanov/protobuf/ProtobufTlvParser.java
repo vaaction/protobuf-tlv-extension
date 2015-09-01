@@ -117,11 +117,7 @@ public class ProtobufTlvParser {
     private Object handleObject(TlvParser tlv, Message.Builder builder,
                                 Descriptors.FieldDescriptor field) throws IOException {
         Message.Builder subBuilder = builder.newBuilderForField(field);
-        if (tlv.getTag() == 5) {
-            mergeFields(tlv.getValue(), subBuilder, tlv.getTag());
-        } else {
-            mergeFields(tlv.getValue(), subBuilder, tlv.getTag());
-        }
+        mergeFields(tlv.getValue(), subBuilder, tlv.getTag());
         return subBuilder.build();
     }
 }
